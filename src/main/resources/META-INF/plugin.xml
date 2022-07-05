@@ -1,0 +1,54 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+  <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+  <id>tk.ogorod98.DualScreenCustomizer</id>
+
+  <!-- Public plugin name should be written in Title Case.
+       Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+  <name>DualScreenCustomizer (for Linux)</name>
+
+  <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+  <vendor email="volodya5000@gmail.com" url="https://github.com/ogorodnikoff2012">Vladimir Ogorodnikov</vendor>
+
+  <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+       Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+       Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+  <description><![CDATA[
+    This plugin allows to configure editor appearance depending on which screen it is shown.
+  ]]></description>
+
+  <!-- Product and plugin compatibility requirements.
+       Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+  <depends>com.intellij.modules.platform</depends>
+
+  <!-- Extension points defined by the plugin.
+       Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+  <extensions defaultExtensionNs="com.intellij">
+    <applicationService
+      serviceImplementation="tk.ogorod98.dualscreencustomizer.config.AppSettingsState" />
+
+    <applicationService
+      serviceImplementation="tk.ogorod98.dualscreencustomizer.config.virtualscreen.VirtualScreenState" />
+
+    <applicationConfigurable
+      parentId="editor"
+      instance="tk.ogorod98.dualscreencustomizer.config.AppSettingsConfigurable"
+      id="tk.ogorod98.dualscreencustomizer.config"
+      displayName="Dual Screen Customizer" />
+
+    <applicationConfigurable
+      parentId="tk.ogorod98.dualscreencustomizer.config"
+      id="tk.ogorod98.dualscreencustomizer.config.virtualscreen"
+      instance="tk.ogorod98.dualscreencustomizer.config.virtualscreen.VirtualScreenConfigurable"
+      displayName="Virtual Screens" />
+
+    <applicationService
+      serviceImplementation="tk.ogorod98.dualscreencustomizer.screeninfo.ScreenInfoService" />
+  </extensions>
+
+  <projectListeners>
+    <listener
+      class="tk.ogorod98.dualscreencustomizer.MainListener"
+      topic="com.intellij.codeInsight.daemon.impl.EditorTrackerListener" />
+  </projectListeners>
+</idea-plugin>
