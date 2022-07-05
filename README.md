@@ -5,3 +5,5 @@ Dual Screen Customizer
 
 Dual Screen Customizer is a plugin for JetBrains IDEs which allows to configure
 editor appearance depending on which screen it is shown.
+
+You can download it [here](https://plugins.jetbrains.com/plugin/19480-dualscreencustomizer-for-linux-).
