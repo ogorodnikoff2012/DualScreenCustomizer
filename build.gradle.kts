@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "tk.ogorod98"
-version = "1.0.0"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
@@ -31,12 +31,12 @@ tasks {
     }
 
     signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
+        certificateChain.set(File("./.keys/chain.crt").readText(Charsets.UTF_8))
+        privateKey.set(File("./.keys/private.pem").readText(Charsets.UTF_8))
         password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
     }
 
     publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
+        token.set(File("./.keys/jetbrains.token").readText(Charsets.UTF_8))
     }
 }
