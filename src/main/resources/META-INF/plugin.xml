@@ -14,7 +14,48 @@
        Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
        Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
   <description><![CDATA[
+    <p>
     This plugin allows to configure editor appearance depending on which screen it is shown.
+    </p>
+
+    <h2>Usecase</h2>
+
+    <p>
+    Imagine that you have two screens:
+    <ul>
+    <li>15" laptop screen with 1920x1080 resolution;</li>
+    <li>24" external screen also with 1920x1080 resolution.</li>
+    </ul>
+
+    Unfortunately, there is no easy way to set up per-monitor DPI in Ubuntu (well, it IS possible if you switch
+    from X11 to Wayland, but it is still so buggy...
+    <a href="https://intellij-support.jetbrains.com/hc/en-us/articles/360007994999-HiDPI-configuration">more info
+    here</a>). Thus, you can either select small font and crack your eyes while using the laptop screen or make
+    font bigger and suffer from lack of free space on your second screen.
+    </p>
+
+    <p>
+    It would be very nice if you could say:
+    <blockquote><p>
+    Well, my IDE, if you're opened on the big screen, then set up small font size. Otherwise, select bigger font
+    size!
+    </p></blockquote>
+
+    And THIS is what this plugin actually does :)
+    </p>
+
+    <h2>
+    Features
+    </h2>
+
+    <p>
+    <ul>
+    <li>Automatic screen config discovery using XRandR tool</li>
+    <li>Virtual screens with custom geometry</li>
+    <li>Font size and font family selection</li>
+    </ul>
+    </p>
+
   ]]></description>
 
   <!-- Product and plugin compatibility requirements.
