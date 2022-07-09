@@ -38,6 +38,22 @@ public class MainListener implements EditorTrackerListener {
 				Objects.requireNonNull(WindowManager.getInstance().getIdeFrame(project)).getComponent());
 		windowMoveEventListener = new WindowMoveEventListener();
 		projectWindow.addComponentListener(windowMoveEventListener);
+		AppSettingsState.getInstance().addUpdateListener(new ActionListener() {
+			private boolean panicFlag = false;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (panicFlag) {
+					return;
+				}
+
+				try {
+					updateSettings(EditorTracker.getInstance(MainListener.this.project).getActiveEditors());
+				} catch (Exception ex) {
+					panicFlag = true;
+					((AppSettingsState) e.getSource()).removeUpdateListener(this);
+				}
+			}
+		});
 	}
 
 	@Override
