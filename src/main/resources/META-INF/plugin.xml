@@ -66,30 +66,30 @@
        Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
   <extensions defaultExtensionNs="com.intellij">
     <applicationService
-      serviceImplementation="tk.ogorod98.dualscreencustomizer.config.AppSettingsState" />
+      serviceImplementation="tk.ogorod98.dualscreencustomizer.config.AppSettingsState"/>
 
     <applicationService
-      serviceImplementation="tk.ogorod98.dualscreencustomizer.config.virtualscreen.VirtualScreenState" />
+      serviceImplementation="tk.ogorod98.dualscreencustomizer.config.virtualscreen.VirtualScreenState"/>
 
     <applicationConfigurable
       parentId="editor"
       instance="tk.ogorod98.dualscreencustomizer.config.AppSettingsConfigurable"
       id="tk.ogorod98.dualscreencustomizer.config"
-      displayName="Dual Screen Customizer" />
+      displayName="Dual Screen Customizer"/>
 
     <applicationConfigurable
       parentId="tk.ogorod98.dualscreencustomizer.config"
       id="tk.ogorod98.dualscreencustomizer.config.virtualscreen"
       instance="tk.ogorod98.dualscreencustomizer.config.virtualscreen.VirtualScreenConfigurable"
-      displayName="Virtual Screens" />
+      displayName="Virtual Screens"/>
 
     <applicationService
-      serviceImplementation="tk.ogorod98.dualscreencustomizer.screeninfo.ScreenInfoService" />
+      serviceImplementation="tk.ogorod98.dualscreencustomizer.screeninfo.ScreenInfoService"/>
   </extensions>
 
   <projectListeners>
     <listener
       class="tk.ogorod98.dualscreencustomizer.MainListener"
-      topic="com.intellij.codeInsight.daemon.impl.EditorTrackerListener" />
+      topic="com.intellij.codeInsight.daemon.impl.EditorTrackerListener"/>
   </projectListeners>
 </idea-plugin>

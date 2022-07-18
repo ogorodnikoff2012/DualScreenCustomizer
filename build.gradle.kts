@@ -1,10 +1,13 @@
+import org.jetbrains.changelog.date
+
 plugins {
     id("java")
-    id("org.jetbrains.intellij") version "1.5.2"
+    id("org.jetbrains.intellij") version "1.7.0"
+    id("org.jetbrains.changelog") version "1.3.1"
 }
 
 group = "tk.ogorod98"
-version = "1.0.2"
+version = "1.0.3"
 
 repositories {
     mavenCentral()
@@ -26,6 +29,7 @@ tasks {
     }
 
     patchPluginXml {
+        changeNotes.set(provider { changelog.getUnreleased().toHTML() })
         sinceBuild.set("212")
         untilBuild.set("222.*")
     }
@@ -39,4 +43,14 @@ tasks {
     publishPlugin {
         token.set(File("./.keys/jetbrains.token").readText(Charsets.UTF_8))
     }
+}
+
+changelog {
+    version.set("1.0.0")
+    path.set("${project.projectDir}/CHANGELOG.md")
+    header.set(provider { "[${version.get()}] - ${date()}" })
+    itemPrefix.set("-")
+    keepUnreleasedSection.set(true)
+    unreleasedTerm.set("[Unreleased]")
+    groups.set(listOf("Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"))
 }

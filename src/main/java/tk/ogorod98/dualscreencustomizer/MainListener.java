@@ -6,7 +6,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.testFramework.LightVirtualFile;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
@@ -30,6 +32,7 @@ public class MainListener implements EditorTrackerListener {
 	private final Project project;
 	private final WindowMoveEventListener windowMoveEventListener;
 	private final Window projectWindow;
+	private final Key<?> FILE_KEY = Key.findKeyByName("FILE_KEY");
 
 	public MainListener(Project project) {
 		this.project = project;
@@ -40,6 +43,7 @@ public class MainListener implements EditorTrackerListener {
 		projectWindow.addComponentListener(windowMoveEventListener);
 		AppSettingsState.getInstance().addUpdateListener(new ActionListener() {
 			private boolean panicFlag = false;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (panicFlag) {
@@ -122,8 +126,19 @@ public class MainListener implements EditorTrackerListener {
 		ScreenInfoRegistry registry = ScreenInfoService.getInstance().getMergedRegistry();
 
 		for (Editor editor : editors) {
+			if (mayHaveSideEffects(editor)) {
+				continue;
+			}
 			updateSettings(registry, editor);
 		}
+	}
+
+	private boolean mayHaveSideEffects(Editor editor) {
+		// This is a dirty hack needed to avoid scheme corruption.
+		// LightVirtualFile is used in VCS commit message editor,
+		// and changing its scheme affects global scheme
+		Object file = editor.getDocument().getUserData(FILE_KEY);
+		return file instanceof LightVirtualFile;
 	}
 
 	private void updateSettings(ScreenInfoRegistry registry, Editor editor) {
@@ -135,7 +150,7 @@ public class MainListener implements EditorTrackerListener {
 		ScreenDescriptor screen = registry.findScreen(editorCenter);
 
 		EditorColorsScheme currentScheme = editor.getColorsScheme();
-		EditorColorsScheme defaultScheme = EditorColorsManager.getInstance().getGlobalScheme();
+		EditorColorsScheme defaultScheme = EditorColorsManager.getInstance().getSchemeForCurrentUITheme();
 
 		ScreenConfig.updateScheme(defaultScheme, currentScheme,
 				screen == null ? null : AppSettingsState.getInstance().screenToConfig.get(screen));
