@@ -2,13 +2,13 @@ package tk.ogorod98.dualscreencustomizer;
 
 import com.intellij.codeInsight.daemon.impl.EditorTracker;
 import com.intellij.codeInsight.daemon.impl.EditorTrackerListener;
+import com.intellij.ide.ui.UISettings;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.wm.WindowManager;
-import com.intellij.testFramework.LightVirtualFile;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
@@ -30,16 +30,14 @@ import tk.ogorod98.dualscreencustomizer.screeninfo.ScreenInfoService;
 public class MainListener implements EditorTrackerListener {
 
 	private final Project project;
-	private final WindowMoveEventListener windowMoveEventListener;
 	private final Window projectWindow;
-	private final Key<?> FILE_KEY = Key.findKeyByName("FILE_KEY");
 
 	public MainListener(Project project) {
 		this.project = project;
 
 		projectWindow = SwingUtilities.getWindowAncestor(
 				Objects.requireNonNull(WindowManager.getInstance().getIdeFrame(project)).getComponent());
-		windowMoveEventListener = new WindowMoveEventListener();
+		WindowMoveEventListener windowMoveEventListener = new WindowMoveEventListener();
 		projectWindow.addComponentListener(windowMoveEventListener);
 		AppSettingsState.getInstance().addUpdateListener(new ActionListener() {
 			private boolean panicFlag = false;
@@ -100,7 +98,7 @@ public class MainListener implements EditorTrackerListener {
 			}
 		}
 
-		private void doProcessEvent(ComponentEvent e) {
+		private void doProcessEvent(ComponentEvent ignored) {
 			if (panicFlag) {
 				return;
 			}
@@ -123,6 +121,10 @@ public class MainListener implements EditorTrackerListener {
 	}
 
 	private void updateSettings(List<? extends Editor> editors) {
+		if (UISettings.getInstance().getPresentationMode()) {
+			return;
+		}
+
 		ScreenInfoRegistry registry = ScreenInfoService.getInstance().getMergedRegistry();
 
 		for (Editor editor : editors) {
@@ -134,11 +136,7 @@ public class MainListener implements EditorTrackerListener {
 	}
 
 	private boolean mayHaveSideEffects(Editor editor) {
-		// This is a dirty hack needed to avoid scheme corruption.
-		// LightVirtualFile is used in VCS commit message editor,
-		// and changing its scheme affects global scheme
-		Object file = editor.getDocument().getUserData(FILE_KEY);
-		return file instanceof LightVirtualFile;
+		return !EditorUtil.isRealFileEditor(editor);
 	}
 
 	private void updateSettings(ScreenInfoRegistry registry, Editor editor) {
