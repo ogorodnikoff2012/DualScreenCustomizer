@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import javax.swing.Timer;
 import tk.ogorod98.dualscreencustomizer.screeninfo.IScreenInfoProvider;
@@ -20,7 +21,7 @@ import tk.ogorod98.dualscreencustomizer.system.ExternalCall;
 public class XRandRScreenInfoProvider implements IScreenInfoProvider, Disposable, ActionListener {
 
 	private static final int DEFAULT_PRIORITY = 0;
-	private volatile Consumer<ScreenInfoRegistry> registryConsumer;
+	private final AtomicReference<Consumer<ScreenInfoRegistry>> registryConsumer = new AtomicReference<>();
 	private final Timer externalCallTimer;
 
 	private final AtomicBoolean panicFlag = new AtomicBoolean(false);
@@ -32,16 +33,16 @@ public class XRandRScreenInfoProvider implements IScreenInfoProvider, Disposable
 
 	@Override
 	public void onUpdate(Consumer<ScreenInfoRegistry> registryConsumer) {
-		this.registryConsumer = registryConsumer;
+		this.registryConsumer.set(registryConsumer);
 	}
 
 	@Override
 	public void dispose() {
 		externalCallTimer.stop();
-		registryConsumer = null;
+		registryConsumer.set(null);
 	}
 
-	private static String getStackTrace(Exception e) {
+	private static String getStackTrace(Throwable e) {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		if (e != null) {
@@ -52,7 +53,7 @@ public class XRandRScreenInfoProvider implements IScreenInfoProvider, Disposable
 		return sw.toString();
 	}
 
-	private void panic(Exception e) {
+	private void panic(Throwable e) {
 		if (panicFlag.compareAndSet(false, true)) {
 			dispose();
 			//   public static int showDialog(Project project,
@@ -71,7 +72,7 @@ public class XRandRScreenInfoProvider implements IScreenInfoProvider, Disposable
 									+ "If this error continues occurring, you can disable XRandR discovery in 'Virtual Screens' settings section.",
 							"DualScreenCustomizer - XRandR Error",
 							getStackTrace(e),
-							new String[]{Messages.getOkButton()},
+							new String[] {Messages.getOkButton()},
 							0,
 							0,
 							Messages.getWarningIcon()
@@ -90,7 +91,7 @@ public class XRandRScreenInfoProvider implements IScreenInfoProvider, Disposable
 			ExternalCall
 					.runCmd("xrandr --verbose")
 					.thenApply(XRandRParser::parse)
-					.thenApply((list) -> {
+					.thenApply(list -> {
 						ScreenInfoRegistry registry = new ScreenInfoRegistry();
 
 						for (XRandRScreenInfo info : list) {
@@ -111,10 +112,14 @@ public class XRandRScreenInfoProvider implements IScreenInfoProvider, Disposable
 						return registry;
 					})
 					.thenAccept(registry -> {
-						var consumer = registryConsumer;
+						var consumer = registryConsumer.get();
 						if (consumer != null) {
 							consumer.accept(registry);
 						}
+					})
+					.exceptionally(ex -> {
+						panic(ex);
+						return null;
 					});
 		} catch (Exception ex) {
 			panic(ex);

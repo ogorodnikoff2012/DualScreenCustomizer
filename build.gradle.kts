@@ -2,12 +2,12 @@ import org.jetbrains.changelog.date
 
 plugins {
     id("java")
-    id("org.jetbrains.intellij") version "1.7.0"
+    id("org.jetbrains.intellij") version "1.12.0"
     id("org.jetbrains.changelog") version "1.3.1"
 }
 
 group = "tk.ogorod98"
-version = "1.0.4"
+version = "1.0.6"
 
 repositories {
     mavenCentral()
@@ -15,7 +15,8 @@ repositories {
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
-    version.set("2021.2")
+    // version.set("2021.2")
+    version.set("2022.3")
     type.set("IC") // Target IDE Platform
 
     plugins.set(listOf(/* Plugin Dependencies */))
@@ -31,7 +32,7 @@ tasks {
     patchPluginXml {
         changeNotes.set(provider { changelog.getUnreleased().toHTML() })
         sinceBuild.set("212")
-        untilBuild.set("222.*")
+        untilBuild.set("231.*")
     }
 
     signPlugin {

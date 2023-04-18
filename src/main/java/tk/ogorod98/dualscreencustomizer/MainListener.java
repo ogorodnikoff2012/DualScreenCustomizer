@@ -16,8 +16,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.List;
 import java.util.Objects;
+import java.util.WeakHashMap;
+import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +32,41 @@ import tk.ogorod98.dualscreencustomizer.screeninfo.ScreenInfoService;
 
 public class MainListener implements EditorTrackerListener {
 
+	private static final WeakHashMap<JComponent, ComponentListener> LISTENERS =
+			new WeakHashMap<>();
+
+	private static final ComponentListener DUMMY_COMPONENT_LISTENER = new ComponentListener() {
+
+		@Override
+		public void componentResized(final ComponentEvent e) {
+			System.out.println(e);
+		}
+
+		@Override
+		public void componentMoved(final ComponentEvent e) {
+			System.out.println(e);
+		}
+
+		@Override
+		public void componentShown(final ComponentEvent e) {
+			System.out.println(e);
+		}
+
+		@Override
+		public void componentHidden(final ComponentEvent e) {
+			System.out.println(e);
+		}
+
+	};
+
+	public void attachDummyListener(final JComponent component) {
+		synchronized (LISTENERS) {
+			LISTENERS.computeIfAbsent(component, (c) -> {
+				c.addComponentListener(DUMMY_COMPONENT_LISTENER);
+				return DUMMY_COMPONENT_LISTENER;
+			});
+		}
+	}
 	private final Project project;
 	private final Window projectWindow;
 
@@ -140,6 +178,7 @@ public class MainListener implements EditorTrackerListener {
 	}
 
 	private void updateSettings(ScreenInfoRegistry registry, Editor editor) {
+		attachDummyListener(editor.getComponent());
 		Rectangle editorGeometry = editor.getComponent().getVisibleRect();
 		Point editorOnScreen = editor.getComponent().getLocationOnScreen();
 		editorGeometry.setLocation(editorOnScreen);

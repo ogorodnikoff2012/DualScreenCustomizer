@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- Fixed data race bug
+
+## 1.0.5
+### Fixed
+- Compatibility with `223.*` IDE builds
+
 ## 1.0.4
 ### Fixed
 - The plugin no longer affects editors in presentation mode

@@ -31,4 +31,13 @@ public class ScreenInfoRecord {
 	public int hashCode() {
 		return Objects.hash(descriptor, geometry);
 	}
+
+	@Override
+	public String toString() {
+		return "ScreenInfoRecord{" +
+				"descriptor=" + descriptor +
+				", geometry=" + geometry +
+				", priority=" + priority +
+				'}';
+	}
 }
