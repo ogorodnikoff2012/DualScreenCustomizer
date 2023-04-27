@@ -22,6 +22,7 @@ public class XRandRScreenInfoProvider implements IScreenInfoProvider, Disposable
 
 	private static final int DEFAULT_PRIORITY = 0;
 	private final AtomicReference<Consumer<ScreenInfoRegistry>> registryConsumer = new AtomicReference<>();
+	private final XRandRMonitorListProvider monitorListProvider = new XRandRMonitorListProvider();
 	private final Timer externalCallTimer;
 
 	private final AtomicBoolean panicFlag = new AtomicBoolean(false);
@@ -91,11 +92,17 @@ public class XRandRScreenInfoProvider implements IScreenInfoProvider, Disposable
 			ExternalCall
 					.runCmd("xrandr --verbose")
 					.thenApply(XRandRParser::parse)
-					.thenApply(list -> {
+					.thenCombine(monitorListProvider.listActiveMonitors(),
+							(list, activeMonitors) -> {
 						ScreenInfoRegistry registry = new ScreenInfoRegistry();
 
 						for (XRandRScreenInfo info : list) {
 							try {
+								if (activeMonitors.containsKey(info.getPort())) {
+									info.setConnected(true);
+									info.setGeometry(activeMonitors.get(info.getPort()));
+								}
+
 								if (!info.isConnected()) {
 									continue;
 								}

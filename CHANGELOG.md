@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 ### Fixed
+- In dual GPU systems, fixed monitor discovery
+
+## 1.0.6
+### Fixed
 - Fixed data race bug
 
 ## 1.0.5

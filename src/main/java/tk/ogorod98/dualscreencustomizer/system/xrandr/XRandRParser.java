@@ -3,8 +3,10 @@ package tk.ogorod98.dualscreencustomizer.system.xrandr;
 import java.awt.Rectangle;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.IntConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,7 +18,7 @@ public class XRandRParser {
 	private final List<XRandRScreenInfo> screenInfo = new ArrayList<>();
 
 	private static final Pattern GEOMETRY_PATTERN = Pattern.compile(
-			"^(?<width>\\d*)x(?<height>\\d*)\\+(?<x>\\d*)\\+(?<y>\\d*)$"
+			"^(?<width>\\d*)(/\\d*)?x(?<height>\\d*)(/\\d*)?\\+(?<x>\\d*)\\+(?<y>\\d*)$"
 	);
 
 	public XRandRParser(List<String> lines) {
@@ -158,7 +160,7 @@ public class XRandRParser {
 		return out.toByteArray();
 	}
 
-	private Rectangle parseGeometry(String geometry) {
+	private static Rectangle parseGeometry(String geometry) {
 		Matcher m = GEOMETRY_PATTERN.matcher(geometry);
 		if (m.matches()) {
 			int width = Integer.parseInt(m.group("width"));
@@ -169,5 +171,25 @@ public class XRandRParser {
 		} else {
 			return new Rectangle(0, 0, -1, -1);
 		}
+	}
+
+	public static Map<String, Rectangle> parseListMonitors(final List<String> lines) {
+		final Map<String, Rectangle> result = new HashMap<>();
+		for (final String line : lines) {
+			if (!Character.isWhitespace(line.charAt(0))) {
+				continue;
+			}
+
+			final String[] tokens = line.split("\\s+");
+			if (tokens.length != 5) {
+				continue;
+			}
+
+			final String port = tokens[4];
+			final String geometry = tokens[3];
+
+			result.put(port, parseGeometry(geometry));
+		}
+		return result;
 	}
 }
