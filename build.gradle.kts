@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "tk.ogorod98"
-version = "1.0.7"
+version = "1.0.8"
 
 repositories {
     mavenCentral()
@@ -16,7 +16,7 @@ repositories {
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
     // version.set("2021.2")
-    version.set("2022.3")
+    version.set("2023.2")
     type.set("IC") // Target IDE Platform
 
     plugins.set(listOf(/* Plugin Dependencies */))
@@ -32,7 +32,7 @@ tasks {
     patchPluginXml {
         changeNotes.set(provider { changelog.getUnreleased().toHTML() })
         sinceBuild.set("212")
-        untilBuild.set("231.*")
+        untilBuild.set("233.*")
     }
 
     signPlugin {

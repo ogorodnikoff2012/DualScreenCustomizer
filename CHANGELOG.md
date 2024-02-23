@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 ### Fixed
+- Bumped IDE version compatibility range
+
+## 1.0.7
+### Fixed
 - In dual GPU systems, fixed monitor discovery
 
 ## 1.0.6
