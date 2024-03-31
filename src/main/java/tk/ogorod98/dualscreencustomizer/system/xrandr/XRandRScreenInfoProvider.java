@@ -106,6 +106,9 @@ public class XRandRScreenInfoProvider implements IScreenInfoProvider, Disposable
 								if (!info.isConnected()) {
 									continue;
 								}
+								if (info.getEDID() == null) {
+									continue;
+								}
 								ScreenDescriptor descriptor = EDID.parseEDID(info.getEDID()).getScreenDescriptor();
 								Rectangle geometry = info.getGeometry();
 								ScreenInfoRecord record = new ScreenInfoRecord(descriptor, geometry,

@@ -2,12 +2,12 @@ import org.jetbrains.changelog.date
 
 plugins {
     id("java")
-    id("org.jetbrains.intellij") version "1.12.0"
+    id("org.jetbrains.intellij") version "1.17.2"
     id("org.jetbrains.changelog") version "1.3.1"
 }
 
 group = "tk.ogorod98"
-version = "1.0.8"
+version = "1.0.9"
 
 repositories {
     mavenCentral()
@@ -16,8 +16,8 @@ repositories {
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
     // version.set("2021.2")
-    version.set("2023.2")
-    type.set("IC") // Target IDE Platform
+    version.set("2023.3.4")
+    type.set("IU") // Target IDE Platform
 
     plugins.set(listOf(/* Plugin Dependencies */))
 }
@@ -25,13 +25,13 @@ intellij {
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
-        sourceCompatibility = "11"
-        targetCompatibility = "11"
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
     }
 
     patchPluginXml {
         changeNotes.set(provider { changelog.getUnreleased().toHTML() })
-        sinceBuild.set("212")
+        sinceBuild.set("232.*")
         untilBuild.set("233.*")
     }
 
