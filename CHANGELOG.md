@@ -1,6 +1,10 @@
 # Changelog
 
 ## [Unreleased]
+### Improved
+- Added X11 event listener which reduces number of `xrandr` calls and consequent screen freezes
+
+## 1.0.8
 ### Fixed
 - Bumped IDE version compatibility range
 

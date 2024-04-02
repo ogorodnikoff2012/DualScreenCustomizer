@@ -14,6 +14,12 @@
        Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
        Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
   <description><![CDATA[
+    <h2>&#9888;&#65039;Warning&#9888;&#65039;</h2>
+    <p>
+    Unfortunately, the actual plugin version isn't available anymore through the JetBrains Marketplace.
+    You can still download the source code from <a href="https://github.com/ogorodnikoff2012/DualScreenCustomizer">my GitHub page</a>.
+    </p>
+
     <p>
     This plugin allows to configure editor appearance depending on which screen it is shown.
     </p>

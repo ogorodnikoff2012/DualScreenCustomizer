@@ -1,9 +1,11 @@
 import org.jetbrains.changelog.date
+import java.time.Year
 
 plugins {
     id("java")
     id("org.jetbrains.intellij") version "1.17.2"
     id("org.jetbrains.changelog") version "1.3.1"
+    id("com.diffplug.spotless") version "6.25.0"
 }
 
 group = "tk.ogorod98"
@@ -11,6 +13,27 @@ version = "1.0.9"
 
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    implementation("net.java.dev.jna:jna:5.14.0")
+    implementation("net.java.dev.jna:jna-platform:5.14.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.0")
+}
+
+spotless {
+    java {
+        importOrder()
+
+        removeUnusedImports()
+
+        cleanthat()
+        googleJavaFormat()
+
+        formatAnnotations()
+
+        licenseHeader("/* (C) Vladimir Ogorodnikov <https://github.com/ogorodnikoff2012>, ${Year.now()} */")
+    }
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin

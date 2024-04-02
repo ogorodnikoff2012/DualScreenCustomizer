@@ -1,3 +1,4 @@
+/* (C) Vladimir Ogorodnikov <https://github.com/ogorodnikoff2012>, 2024 */
 package tk.ogorod98.dualscreencustomizer.config.ui;
 
 import com.intellij.ui.components.JBLabel;
@@ -24,204 +25,214 @@ import tk.ogorod98.dualscreencustomizer.util.UiUtils;
 
 public class ScreenSettingsComponent {
 
-	private final AppSettingsComponent parent;
-	private final JPanel mainPanel;
+  private final AppSettingsComponent parent;
+  private final JPanel mainPanel;
 
-	private final JBTextField identifier = new JBTextField();
-	private final JBTextField vendorName = new JBTextField();
-	private final JBTextField modelName = new JBTextField();
+  private final JBTextField identifier = new JBTextField();
+  private final JBTextField vendorName = new JBTextField();
+  private final JBTextField modelName = new JBTextField();
 
-	private final JButton removeButton = new JButton();
-	private final JBOptionButton addLineButton;
+  private final JButton removeButton = new JButton();
+  private final JBOptionButton addLineButton;
 
-	private final List<LineComponent> lines = new ArrayList<>();
+  private final List<LineComponent> lines = new ArrayList<>();
 
-	private final Map<String, LineComponent> fieldNameToLine = new HashMap<>();
-	private final VerticalBox linesBox = new VerticalBox();
+  private final Map<String, LineComponent> fieldNameToLine = new HashMap<>();
+  private final VerticalBox linesBox = new VerticalBox();
 
-	public ScreenSettingsComponent(AppSettingsComponent parent) {
-		this.parent = parent;
+  public ScreenSettingsComponent(AppSettingsComponent parent) {
+    this.parent = parent;
 
-		addLineButton = new JBOptionButton(
-				new AbstractAction("Add Line") {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						addLineButton.showPopup(null, true);
-					}
-				}, null
-		);
+    addLineButton =
+        new JBOptionButton(
+            new AbstractAction("Add Line") {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                addLineButton.showPopup(null, true);
+              }
+            },
+            null);
 
-		updateLineOptions();
-		addModifyListener(identifier);
-		addModifyListener(vendorName);
-		addModifyListener(modelName);
+    updateLineOptions();
+    addModifyListener(identifier);
+    addModifyListener(vendorName);
+    addModifyListener(modelName);
 
-		mainPanel = FormBuilder.createFormBuilder()
-				.addComponent(UiUtils.buildHorizontalBox(
-						new JBLabel("Identifier"), identifier,
-						new JBLabel("Vendor name"), vendorName,
-						new JBLabel("Model name"), modelName,
-						addLineButton, removeButton
-				))
-				.addComponent(linesBox)
-				.addSeparator()
-				.getPanel();
-	}
+    mainPanel =
+        FormBuilder.createFormBuilder()
+            .addComponent(
+                UiUtils.buildHorizontalBox(
+                    new JBLabel("Identifier"),
+                    identifier,
+                    new JBLabel("Vendor name"),
+                    vendorName,
+                    new JBLabel("Model name"),
+                    modelName,
+                    addLineButton,
+                    removeButton))
+            .addComponent(linesBox)
+            .addSeparator()
+            .getPanel();
+  }
 
-	private void addModifyListener(JBTextField textField) {
-		textField.addKeyListener(new KeyListener() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				onModify();
-			}
+  private void addModifyListener(JBTextField textField) {
+    textField.addKeyListener(
+        new KeyListener() {
+          @Override
+          public void keyTyped(KeyEvent e) {
+            onModify();
+          }
 
-			@Override
-			public void keyPressed(KeyEvent e) {
-				onModify();
-			}
+          @Override
+          public void keyPressed(KeyEvent e) {
+            onModify();
+          }
 
-			@Override
-			public void keyReleased(KeyEvent e) {
-				onModify();
-			}
-		});
-	}
+          @Override
+          public void keyReleased(KeyEvent e) {
+            onModify();
+          }
+        });
+  }
 
-	protected void onModify() {
-		parent.onModify();
-	}
+  protected void onModify() {
+    parent.onModify();
+  }
 
-	private Action[] buildLineOptions() {
-		List<Action> actions = new ArrayList<>();
-		Collection<Field> availableOptions = ScreenConfig.getFields().values();
+  private Action[] buildLineOptions() {
+    List<Action> actions = new ArrayList<>();
+    Collection<Field> availableOptions = ScreenConfig.getFields().values();
 
-		for (Field option : availableOptions) {
-			if (fieldNameToLine.containsKey(option.getName())) {
-				continue;
-			}
+    for (Field option : availableOptions) {
+      if (fieldNameToLine.containsKey(option.getName())) {
+        continue;
+      }
 
-			actions.add(new NewLineAction(option));
-		}
+      actions.add(new NewLineAction(option));
+    }
 
-		return actions.toArray(new Action[0]);
-	}
+    return actions.toArray(new Action[0]);
+  }
 
-	public String getIdentifier() {
-		return identifier.getText();
-	}
+  public String getIdentifier() {
+    return identifier.getText();
+  }
 
-	public void setIdentifier(String identifier) {
-		this.identifier.setText(identifier);
-	}
+  public void setIdentifier(String identifier) {
+    this.identifier.setText(identifier);
+  }
 
-	public String getVendorName() {
-		return vendorName.getText();
-	}
+  public String getVendorName() {
+    return vendorName.getText();
+  }
 
-	public void setVendorName(String vendorName) {
-		this.vendorName.setText(vendorName);
-	}
+  public void setVendorName(String vendorName) {
+    this.vendorName.setText(vendorName);
+  }
 
-	public String getModelName() {
-		return modelName.getText();
-	}
+  public String getModelName() {
+    return modelName.getText();
+  }
 
-	public void setModelName(String modelName) {
-		this.modelName.setText(modelName);
-	}
+  public void setModelName(String modelName) {
+    this.modelName.setText(modelName);
+  }
 
-	public void setRemoveAction(Action action) {
-		removeButton.setAction(action);
-	}
-	public JPanel getPanel() {
-		return mainPanel;
-	}
+  public void setRemoveAction(Action action) {
+    removeButton.setAction(action);
+  }
 
-	public void applyModel(ScreenConfig model) {
-		for (Field f : ScreenConfig.getFields().values()) {
-			try {
-				Object value = f.get(model);
-				if (value != null) {
-					addLine(f, Objects.toString(value));
-				}
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
+  public JPanel getPanel() {
+    return mainPanel;
+  }
 
-	public ScreenConfig dumpModel() {
-		ScreenConfig config = new ScreenConfig();
+  public void applyModel(ScreenConfig model) {
+    for (Field f : ScreenConfig.getFields().values()) {
+      try {
+        Object value = f.get(model);
+        if (value != null) {
+          addLine(f, Objects.toString(value));
+        }
+      } catch (IllegalAccessException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
 
-		for (LineComponent line : lines) {
-			String fieldName = line.getFieldName();
-			String fieldValue = line.getFieldValue();
-			if (fieldValue == null || fieldValue.length() == 0) {
-				continue;
-			}
+  public ScreenConfig dumpModel() {
+    ScreenConfig config = new ScreenConfig();
 
-			Field field = ScreenConfig.getFields().get(fieldName);
-			try {
-				field.set(config, ScreenConfig.getParser(field).apply(fieldValue));
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
+    for (LineComponent line : lines) {
+      String fieldName = line.getFieldName();
+      String fieldValue = line.getFieldValue();
+      if (fieldValue == null || fieldValue.isEmpty()) {
+        continue;
+      }
 
-		return config;
-	}
+      Field field = ScreenConfig.getFields().get(fieldName);
+      try {
+        field.set(config, ScreenConfig.getParser(field).apply(fieldValue));
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
 
-	private class NewLineAction extends AbstractAction {
+    return config;
+  }
 
-		private final Field field;
-		public NewLineAction(Field field) {
-			super(field.getName());
-			this.field = field;
-		}
+  private class NewLineAction extends AbstractAction {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			onModify();
-			addLine(field, null);
-		}
-	}
+    private final Field field;
 
-	public void addLine(Field field, String value) {
-		LineComponent component = new LineComponent(this, field, value);
-		lines.add(component);
-		fieldNameToLine.put(field.getName(), component);
-		component.setRemoveAction(new RemoveLineAction(component));
-		linesBox.add(component.getPanel());
-		mainPanel.validate();
-		updateLineOptions();
-	}
+    public NewLineAction(Field field) {
+      super(field.getName());
+      this.field = field;
+    }
 
-	public void removeLine(LineComponent component) {
-		linesBox.remove(component.getPanel());
-		lines.remove(component);
-		fieldNameToLine.remove(component.getFieldName());
-		mainPanel.validate();
-		updateLineOptions();
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      onModify();
+      addLine(field, null);
+    }
+  }
 
-	private void updateLineOptions() {
-		Action[] lineOptions = buildLineOptions();
-		addLineButton.setOptions(lineOptions);
-		addLineButton.setEnabled(lineOptions.length > 0);
-	}
+  public void addLine(Field field, String value) {
+    LineComponent component = new LineComponent(this, field, value);
+    lines.add(component);
+    fieldNameToLine.put(field.getName(), component);
+    component.setRemoveAction(new RemoveLineAction(component));
+    linesBox.add(component.getPanel());
+    mainPanel.validate();
+    updateLineOptions();
+  }
 
-	private class RemoveLineAction extends AbstractAction {
+  public void removeLine(LineComponent component) {
+    linesBox.remove(component.getPanel());
+    lines.remove(component);
+    fieldNameToLine.remove(component.getFieldName());
+    mainPanel.validate();
+    updateLineOptions();
+  }
 
-		private final LineComponent component;
-		public RemoveLineAction(LineComponent component) {
-			super("Remove line");
-			this.component = component;
-		}
+  private void updateLineOptions() {
+    Action[] lineOptions = buildLineOptions();
+    addLineButton.setOptions(lineOptions);
+    addLineButton.setEnabled(lineOptions.length > 0);
+  }
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			onModify();
-			removeLine(component);
-		}
-	}
+  private class RemoveLineAction extends AbstractAction {
+
+    private final LineComponent component;
+
+    public RemoveLineAction(LineComponent component) {
+      super("Remove line");
+      this.component = component;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      onModify();
+      removeLine(component);
+    }
+  }
 }
