@@ -14,7 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,6 +92,20 @@ public class VirtualScreenState implements PersistentStateComponent<VirtualScree
   public void loadState(@NotNull VirtualScreenState state) {
     XmlSerializerUtil.copyBean(state, this);
     EventQueue.invokeLater(this::sendUpdateEvent);
+  }
+
+  public Future<Void> setUseXRandR(boolean useXRandR) {
+    if (this.useXRandR == useXRandR) {
+      return CompletableFuture.completedFuture(null);
+    }
+
+    final CompletableFuture<Void> future = new CompletableFuture<>();
+    this.useXRandR = useXRandR;
+    EventQueue.invokeLater(() -> {
+        sendUpdateEvent();
+        future.complete(null);
+    });
+    return future;
   }
 
   private void sendUpdateEvent() {

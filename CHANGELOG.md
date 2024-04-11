@@ -1,6 +1,10 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Added status bar widget
+
+## 1.0.9
 ### Improved
 - Added X11 event listener which reduces number of `xrandr` calls and consequent screen freezes
 

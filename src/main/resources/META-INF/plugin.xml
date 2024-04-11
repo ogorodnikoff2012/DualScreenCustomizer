@@ -75,6 +75,8 @@
   <!-- Extension points defined by the plugin.
        Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
   <extensions defaultExtensionNs="com.intellij">
+    <statusBarWidgetFactory implementation="tk.ogorod98.dualscreencustomizer.statusbar.StatusBarFactory"
+      id="DualScreenCustomizer"/>
     <applicationService
       serviceImplementation="tk.ogorod98.dualscreencustomizer.config.AppSettingsState"/>
 
@@ -96,6 +98,14 @@
     <applicationService
       serviceImplementation="tk.ogorod98.dualscreencustomizer.screeninfo.ScreenInfoService"/>
   </extensions>
+
+  <actions>
+    <action class="tk.ogorod98.dualscreencustomizer.actions.ToggleXRandRDiscoveryAction"
+      id="ToggleXRandRDiscoveryAction"
+      text="Toggle XRandR Discovery"
+      description="Toggle XRandR Discovery"
+    />
+  </actions>
 
   <projectListeners>
     <listener

@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "tk.ogorod98"
-version = "1.0.9"
+version = "1.0.10"
 
 repositories {
     mavenCentral()

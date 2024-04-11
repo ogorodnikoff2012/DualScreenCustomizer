@@ -3,12 +3,14 @@ package tk.ogorod98.dualscreencustomizer.system.xrandr;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.Messages;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -22,7 +24,7 @@ import tk.ogorod98.dualscreencustomizer.system.ExternalCall;
 import tk.ogorod98.dualscreencustomizer.system.x11event.X11EventPoller;
 
 public class XRandRScreenInfoProvider implements IScreenInfoProvider, Disposable, ActionListener {
-
+  private static final Logger LOGGER = Logger.getInstance(XRandRScreenInfoProvider.class);
   private static final int DEFAULT_PRIORITY = 0;
   private final AtomicReference<Consumer<ScreenInfoRegistry>> registryConsumer =
       new AtomicReference<>();
@@ -111,6 +113,7 @@ public class XRandRScreenInfoProvider implements IScreenInfoProvider, Disposable
           .thenCombine(
               monitorListProvider.listActiveMonitors(),
               (list, activeMonitors) -> {
+                System.err.println(new Date() + " XRandRScreenInfoProvider.actionPerformed");
                 ScreenInfoRegistry registry = new ScreenInfoRegistry();
 
                 for (XRandRScreenInfo info : list) {
