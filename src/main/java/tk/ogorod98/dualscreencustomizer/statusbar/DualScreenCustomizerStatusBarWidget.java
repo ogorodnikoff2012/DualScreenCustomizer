@@ -1,3 +1,4 @@
+/* (C) Vladimir Ogorodnikov <https://github.com/ogorodnikoff2012>, 2024 */
 package tk.ogorod98.dualscreencustomizer.statusbar;
 
 import com.intellij.ide.DataManager;
@@ -20,39 +21,33 @@ import java.awt.event.MouseEvent;
 import javax.swing.Icon;
 import javax.swing.SwingConstants;
 import org.jetbrains.annotations.NotNull;
+import tk.ogorod98.dualscreencustomizer.meta.BuildInfo;
 import tk.ogorod98.dualscreencustomizer.meta.Icons;
-import tk.ogorod98.dualscreencustomizer.meta.Version;
 
 public class DualScreenCustomizerStatusBarWidget implements StatusBarWidget, IconPresentation {
   public DualScreenCustomizerStatusBarWidget(final @NotNull Project project) {}
 
-  @NotNull
-  @Override
+  @NotNull @Override
   public String ID() {
     return StatusBarFactory.STATUS_BAR_ID;
   }
 
-
-  @NotNull
-  @Override
+  @NotNull @Override
   public Icon getIcon() {
     return Icons.DUAL_SCREEN_CUSTOMIZER;
   }
 
-  @NotNull
-  @Override
+  @NotNull @Override
   public String getTooltipText() {
     return StatusBarFactory.DISPLAY_NAME;
   }
 
-  @NotNull
-  @Override
+  @NotNull @Override
   public WidgetPresentation getPresentation() {
     return this;
   }
 
-  @NotNull
-  @Override
+  @NotNull @Override
   public Consumer<MouseEvent> getClickConsumer() {
     return event -> {
       final Component component = event.getComponent();
@@ -64,23 +59,22 @@ public class DualScreenCustomizerStatusBarWidget implements StatusBarWidget, Ico
     };
   }
 
-  @NotNull
-  private static ListPopup getPopup(final DataContext dataContext) {
+  @NotNull private static ListPopup getPopup(final DataContext dataContext) {
     final ActionGroup actions = getActions();
-    final ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
-        StatusBarFactory.DISPLAY_NAME,
-        actions,
-        dataContext,
-        JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-        true,
-            ActionPlaces.POPUP
-    );
-    popup.setAdText(Version.getVersion(), SwingConstants.CENTER);
+    final ListPopup popup =
+        JBPopupFactory.getInstance()
+            .createActionGroupPopup(
+                StatusBarFactory.DISPLAY_NAME,
+                actions,
+                dataContext,
+                JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                true,
+                ActionPlaces.POPUP);
+    popup.setAdText("Version " + BuildInfo.VERSION, SwingConstants.CENTER);
     return popup;
   }
 
-  @NotNull
-  private static ActionGroup getActions() {
+  @NotNull private static ActionGroup getActions() {
     final DefaultActionGroup group = new DefaultActionGroup();
     group.setPopup(true);
 

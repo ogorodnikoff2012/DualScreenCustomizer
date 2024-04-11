@@ -1,3 +1,4 @@
+/* (C) Vladimir Ogorodnikov <https://github.com/ogorodnikoff2012>, 2024 */
 package tk.ogorod98.dualscreencustomizer.statusbar;
 
 import com.intellij.openapi.project.Project;

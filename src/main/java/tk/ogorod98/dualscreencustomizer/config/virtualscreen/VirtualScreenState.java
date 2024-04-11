@@ -101,10 +101,11 @@ public class VirtualScreenState implements PersistentStateComponent<VirtualScree
 
     final CompletableFuture<Void> future = new CompletableFuture<>();
     this.useXRandR = useXRandR;
-    EventQueue.invokeLater(() -> {
-        sendUpdateEvent();
-        future.complete(null);
-    });
+    EventQueue.invokeLater(
+        () -> {
+          sendUpdateEvent();
+          future.complete(null);
+        });
     return future;
   }
 
