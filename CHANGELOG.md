@@ -1,6 +1,11 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- Bumped IDE version compatibility range
+- Build version discovery mechanism
+
+## 1.0.10
 ### Added
 - Added status bar widget
 

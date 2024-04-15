@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "tk.ogorod98"
-version = "1.0.10"
+version = "1.0.11-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -40,7 +40,7 @@ spotless {
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
     // version.set("2021.2")
-    version.set("2023.3.4")
+    version.set("2024.1")
     type.set("IU") // Target IDE Platform
 
     plugins.set(listOf(/* Plugin Dependencies */))
@@ -95,7 +95,7 @@ tasks {
     patchPluginXml {
         changeNotes.set(provider { changelog.getUnreleased().toHTML() })
         sinceBuild.set("232.*")
-        untilBuild.set("233.*")
+        untilBuild.set("241.*")
     }
 
     signPlugin {
