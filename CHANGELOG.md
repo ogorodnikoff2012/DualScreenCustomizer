@@ -3,6 +3,10 @@
 ## [Unreleased]
 ### Fixed
 - Bumped IDE version compatibility range
+
+## 1.0.11
+### Fixed
+- Bumped IDE version compatibility range
 - Build version discovery mechanism
 
 ## 1.0.10
